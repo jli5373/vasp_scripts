@@ -10,6 +10,7 @@ import seaborn as sns
 #User input:
 spin_polarized = False
 singleElementDos = False             #True will selectively plot the DOS for only one element
+combineLikeOrbitals = True              #True will sum px,py,pz, same for d
 atomOfInterest = 'Zr'               #Only plot the DOS for this element
 normalizeAtom = 'Zr'                #Normalize by the number of these atoms (typically the metal)
 customEnergyDomain = [0,17]         #Set to False for automatic plot scaling
@@ -131,9 +132,22 @@ numberOfOrbitals = []
 for i in range(len(numberOfAtoms)):
     collectElementDos = sum(atomDosArray[startIndex:startIndex+atomNumberLookup[identities[i]]]) / atomNumberLookup[normalizeAtom]              #sum matrices of like atoms       
     
+
+    if combineLikeOrbitals:
+        combineS = np.reshape(np.array(collectElementDos[:,1]), (-1,1))
+        combineP = np.reshape(np.sum(np.array(collectElementDos[:,2:5]), axis=1), (-1,1))
+        combineD = np.reshape(np.sum(np.array(collectElementDos[:,5:]), axis=1), (-1,1))
+
+        collectElementDos = np.concatenate((np.reshape(elementBreakdownEnergies,(-1,1) ), combineS, combineP, combineD ), axis=1)
+        print(np.shape(collectElementDos))
+
     #VERY TEMPORARY FIX:
+    #future fix: if a type of orbital is completely empty, remove it
     if identities[i] == 'N':
-        collectElementDos = collectElementDos[:,0:5]
+        if combineLikeOrbitals:
+            collectElementDos = collectElementDos[:,0:3]
+        else:
+            collectElementDos = collectElementDos[:,0:5]
     
     elementBreakdownDos.append(collectElementDos[:,1:])                                                                                         #append summed matrix for element "i", excluding the summed energies
     numberOfOrbitals.append(len(collectElementDos[0,1:]))                       #count the number of different occupied orbitals for species i (EX: if Nitrogen, there is s,px,py,pz, no d: there are 4 occupied orbitals)
@@ -152,14 +166,21 @@ for j in range(1,len(elementBreakdownDos)):
 #plot stacks by element and orbital
 #generate labels for the stack plot
 labels = []
-orbitals = ['s(u,d)' , 'p_y(u,d)', 'p_z(u,d)', 'p_x(u,d)', 'd_[xy](u,d)', 'd_[yz](u,d)','d_[z2-r2](u,d)', 'd_[xz](u,d)', 'd_[x2-y2](u,d)]']
+if combineLikeOrbitals:
+    orbitals = ['s', 'p', 'd']
+else:
+    orbitals = ['s(u,d)' , 'p_y(u,d)', 'p_z(u,d)', 'p_x(u,d)', 'd_[xy](u,d)', 'd_[yz](u,d)','d_[z2-r2](u,d)', 'd_[xz](u,d)', 'd_[x2-y2](u,d)]']
+
 for i in range(len(numberOfAtoms)):
     for j in range(numberOfOrbitals[i]):
         labels.append('%s %s ' % (identities[i], orbitals[j]) )
 a = elementBreakdownEnergies
 b = elementBreakdownPlot.transpose()
 
-plt.stackplot(a,b, colors=sns.color_palette('hls', sum(numberOfOrbitals)+1))
+if combineLikeOrbitals:
+    plt.stackplot(a,b, colors=sns.color_palette('colorblind'))
+else:
+    plt.stackplot(a,b, colors=sns.color_palette('hls', sum(numberOfOrbitals)+1))
 #plt.plot(a,simpleCombinedUpDownDos, color='b')
 plt.vlines(doscarParams[-2],min(simpleCombinedUpDownDos), max(simpleCombinedUpDownDos), linestyles='dashed', color='k')
 plt.legend(labels)
@@ -178,5 +199,5 @@ print(doscarParams[-2])
 
 fig = plt.gcf()
 fig.set_size_inches(18.5, 10)
-fig.savefig(os.path.join(simulationDir, '%s_doscarPlot.pdf' % (simulationDir.split('/')[-4] + '_' + simulationDir.split('/')[-3] )), dpi=100)
-#plt.show()
+#fig.savefig(os.path.join(simulationDir, '%s_doscarPlot.pdf' % (simulationDir.split('/')[-4] + '_' + simulationDir.split('/')[-3] )), dpi=100)
+plt.show()

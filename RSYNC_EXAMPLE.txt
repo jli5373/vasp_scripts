@@ -1,0 +1,1 @@
+0 2 * * * rsync -rave ssh /storage/projects jonas@128.111.164.154:/var/services/homes/jonas/backups/ > /home/jonas/autobackup_0.log 2>&1

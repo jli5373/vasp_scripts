@@ -1,0 +1,40 @@
+List of SCEL+configs of interest (txt) - by CASM project
+by line
+ex. for HCP 1 txt file
+SCEL1_1_1_0_0_0/1/
+SCEL1_1_1_0_2_0/0/
+
+ex. for FCC another txt file
+SCEL4_1_etc/0
+SCEL
+SCEL
+SCEL..././
+
+templates all in a single directory
+
+assuming starting from: ran relaxation->static on every config and already picked ground states - make sure statics for future already calculate PDOS
+we want: band struct/charge diff/parchg (require E ranges)/rerun relax->static w spinpol
+
+template INCAR/other inputs for the scenarios (every should have template)
+ex. spinpol
+INCAR_relax_spinpolarized_template
+
+Individual scripts/functions based on scenario
+
+for spin pol:
+Inputs: SCEL List, INCAR_relax_spinpolarized_template, directory_of_vasp_runs, parent_directory
+if(directory_of_vasp_runs)
+    cp POSCAR, POTCAR, KPOINTS (mapping to that will require walk, make sure statics use run.final as folder) from those runs to new folders
+    print: copied from xyz
+
+elseif(new)
+    will have been done in CASM
+elseif(random POSCAR)
+    POSCAR -> generate POTCAR
+    have KPOINTS density & ENCUT as inputs
+    cp INCAR_relax_spinpolarized_template and format
+
+generate submit scripts that go in same spot as input INCAR
+qsub submit script (this way commenting anything in the SCEL list doesnt rerun it)
+
+in main folder: SCEL_list, python script to setup folders (which has header inputs)

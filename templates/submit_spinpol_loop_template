@@ -1,0 +1,75 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn={processors}
+#PBS -l walltime=80:00:00
+#PBS -j oe
+#PBS -N {simulationName}
+#PBS -V
+
+#necessary for vasp on intel
+module load intel/18
+IMAX=20 #max number of vasp runs after initial relaxation
+
+
+#gives unlimited cache space..?
+ulimit -s unlimited
+
+
+cd $PBS_O_WORKDIR
+cat $PBS_NODEFILE > nodes
+
+printf "STARTED\n" > STATUS
+printf "STARTED {simulationName}\n" >> {experiment_dir}/OVERALLSTATUS
+
+#perform relaxation loop like casm
+mkdir relax_loop_to_static
+cd ./relax_loop_to_static
+
+I=0
+mkdir run.0
+
+#important paths
+
+cp {vaspFilesDir}INCAR run.0/INCAR
+cp {vaspFilesDir}POSCAR run.0/POSCAR
+cp {vaspFilesDir}KPOINTS run.0/KPOINTS
+cp {vaspFilesDir}POTCAR run.0/POTCAR
+cd run.0
+
+mpirun -np $PBS_NP -machinefile ../../nodes /home/dober/vaspDemo/vasp_o0_bin/vasp_std >& vasp.out
+NSTEPS=$(cat vasp.out | grep E0 | wc -l)
+grep "reached required accuracy" OUTCAR
+if [ $? -ne 0 ] ; then printf "FAILED TO RELAX\n" >> ../../STATUS ; exit ; fi
+cd ../
+
+while [ $NSTEPS -ne 1 ] && [ $I -lt $IMAX ]
+do
+    printf "Run $I had $NSTEPS steps.\n" >> ../../STATUS
+    I=$(($I+1))
+    cp -r run.$(($I-1)) run.$I
+    cd run.$I
+    cp CONTCAR POSCAR
+    mpirun -np $PBS_NP -machinefile ../../nodes /home/dober/vaspDemo/vasp_o0_bin/vasp_std >& vasp.out
+    NSTEPS=$(cat vasp.out | grep E0 | wc -l)
+    grep "reached required accuracy" OUTCAR
+    if [ $? -ne 0 ] ; then printf "FAILED TO RELAX\n" >> ../../STATUS ; exit ; fi
+    cd ../
+done
+
+I=$(($I+1))
+cp -r run.$(($I-1)) run.final
+cd run.final
+cp CONTCAR POSCAR
+
+sed -i "s/LREAL.*/LREAL = .FALSE./g" INCAR
+sed -i "s/IBRION.*/IBRION = -1/g" INCAR
+sed -i "s/NSW.*/NSW = 0/g" INCAR
+sed -i "s/ISIF.*/ISIF = 0/g" INCAR
+sed -i "s/ISMEAR.*/ISMEAR = -5/g" INCAR
+sed -i "s/LCHARG.*/LCHARG = .TRUE." INCAR
+{lwave}
+
+
+mpirun -np $PBS_NP -machinefile ../../nodes /home/dober/vaspDemo/vasp_o0_bin/vasp_std >& vasp.out
+cd ../../
+
+printf "FINISHED {simulationName} static calc\n" >> {experiment_dir}/OVERALLSTATUS

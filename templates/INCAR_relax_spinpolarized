@@ -1,0 +1,26 @@
+SYSTEM = {simulationName}
+ISTART = 0
+
+ISMEAR = 0
+SIGMA = 0.1
+ENCUT = {encut}
+ALGO = NORMAL
+EDIFF = 1E-5
+PREC = Accurate
+LREAL = AUTO
+ISPIN = 2
+
+IBRION = 2
+NSW = 60
+
+EDIFFG = -0.02
+
+ISIF = 3
+
+LWAVE = .FALSE.
+LCHARG = .FALSE.
+LORBIT = 11
+
+
+NCORE = {ncore}
+NEDOS = {nedos}

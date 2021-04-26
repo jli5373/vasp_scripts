@@ -38,7 +38,7 @@ class poscar:
                     else:
                         self.coord_style = 'Cartesian'
                 elif lineCount > 7 and readCoords:
-                    self.coords.append(line.split())
+                    self.coords.append(line.split()[0:3]) #will chop of any descriptors
                 lineCount += 1
 
         pfile.close()

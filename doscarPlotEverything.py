@@ -8,7 +8,7 @@ import seaborn as sns
 
 
 #User input:
-spin_polarized = False
+spin_polarized = True
 singleElementDos = False             #True will selectively plot the DOS for only one element
 combineLikeOrbitals = True              #True will sum px,py,pz, same for d
 atomOfInterest = 'Zr'               #Only plot the DOS for this element
@@ -22,7 +22,8 @@ doscar = os.path.join(simulationDir, 'DOSCAR')
 poscar = os.path.join(simulationDir, 'POSCAR')
 print('Spin polarized == %s' % str(spin_polarized))
 print('Single Element Dos == %s' % str(singleElementDos))
-print('Atom of Interest is %s\n' % atomOfInterest)
+print('Atom of Interest is %s' % atomOfInterest)
+print('Normalize atom is %s' % normalizeAtom)
 
 
 #Read in the element types and number of each element from the poscar, store in a dictionary
@@ -40,7 +41,7 @@ with open(poscar) as infile:
             lineCount += 1
     infile.close()
 atomNumberLookup = dict(zip(identities, numberOfAtoms))
-print(atomNumberLookup[normalizeAtom])
+print('Number of normalize atoms is %s' % str(atomNumberLookup[normalizeAtom]))
 
 
 #Get doscar parameters: E(max), E(min), (the energy range in which the DOS is given), NEDOS,  E(fermi), 1.0000
@@ -139,7 +140,7 @@ for i in range(len(numberOfAtoms)):
         combineD = np.reshape(np.sum(np.array(collectElementDos[:,5:]), axis=1), (-1,1))
 
         collectElementDos = np.concatenate((np.reshape(elementBreakdownEnergies,(-1,1) ), combineS, combineP, combineD ), axis=1)
-        print(np.shape(collectElementDos))
+        print('%s: %s number of energy points x (energy values + number of orbitals) ' %  (identities[i], str(np.shape(collectElementDos))))
 
     #VERY TEMPORARY FIX:
     #future fix: if a type of orbital is completely empty, remove it
@@ -151,7 +152,7 @@ for i in range(len(numberOfAtoms)):
     
     elementBreakdownDos.append(collectElementDos[:,1:])                                                                                         #append summed matrix for element "i", excluding the summed energies
     numberOfOrbitals.append(len(collectElementDos[0,1:]))                       #count the number of different occupied orbitals for species i (EX: if Nitrogen, there is s,px,py,pz, no d: there are 4 occupied orbitals)
-    print(np.sum(collectElementDos, axis=0))
+    #print(np.sum(collectElementDos, axis=0))
     startIndex = startIndex + atomNumberLookup[identities[i]]
 
 #stack up orbital DOS for different atoms on top of each other (append matrix of orbital DOS to the right of an existing DOS matrix- axis 1 is append horizontal)
@@ -160,9 +161,22 @@ for j in range(1,len(elementBreakdownDos)):
     elementBreakdownPlot = np.append(elementBreakdownPlot, np.array(elementBreakdownDos[j]), axis=1)
 
 
+#VERY TEMPORARY to plot full dos spin polarized
+plt.plot(elementBreakdownEnergies , fullDos[:,1]/atomNumberLookup[normalizeAtom], color='k')
+plt.plot(elementBreakdownEnergies, fullDos[:,2]/atomNumberLookup[normalizeAtom], color='xkcd:crimson')
+plt.legend(['Spin Up' , 'Spin Down'])
+plt.vlines(doscarParams[-2],min(simpleCombinedUpDownDos), max(simpleCombinedUpDownDos), linestyles='dashed', color='k')
+plt.xlabel('eV', fontsize=18)
+plt.ylabel('DOS (Per %s)'%(normalizeAtom), fontsize=18)
+plt.title(simulationDir.split('/')[-4] + '/' + simulationDir.split('/')[-3], fontsize=30)
+fig = plt.gcf()
+fig.set_size_inches(18.5, 10)
+fig.savefig(os.path.join(simulationDir, '%s_magneticFullDoscar.pdf' % (simulationDir.split('/')[-4] + '_' + simulationDir.split('/')[-3] )), dpi=100)
+plt.show()
 
 
 
+'''
 #plot stacks by element and orbital
 #generate labels for the stack plot
 labels = []
@@ -195,9 +209,10 @@ if customDosRange:
 #for debugging    
 #for i in elementBreakdownEnergies:
 #    print(i)
-print(doscarParams[-2])
+print('fermi energy is: %s' % doscarParams[-2])
 
 fig = plt.gcf()
 fig.set_size_inches(18.5, 10)
 fig.savefig(os.path.join(simulationDir, '%s_doscarPlot.pdf' % (simulationDir.split('/')[-4] + '_' + simulationDir.split('/')[-3] )), dpi=100)
 plt.show()
+'''

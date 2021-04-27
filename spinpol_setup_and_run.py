@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import sys
+import djVaspLib as dj      #has some useful classes for vasp stuff (specifically for poscar class in this case)
 
 
 #Provide scel list file and casm root directory as 1st and second command line arguments
@@ -21,6 +22,7 @@ ncore = 2
 nedos = 301
 processors = 4
 lwave_on = False           #change to True to write wavecar after static run
+magnetic_moment = 1.5                #in units of mu_B --> moment of the metal
 
 
 #User parameters (for your system)
@@ -54,8 +56,18 @@ for i in range(len(scel_list)):
         
         #format incar files
         with open(os.path.join(template_path, 'INCAR_relax_spinpolarized')) as f:
+            magmom = ''
             template = f.read()
-            s = template.format(simulationName=scel_list[i], encut=encut, ncore=ncore, nedos=nedos)
+            poscar = dj.poscar(os.path.join(experiment_dir, scel_list[i], 'POSCAR'))
+            
+            for k in range(len(poscar.species_vec)):
+                if poscar.species_vec[k] == 'N':
+                    magmom = magmom + '%s*0 ' % str(poscar.species_count[k])
+                else:
+                    magmom = magmom + '%s*%s ' % (str(poscar.species_count[k]) , str(magnetic_moment))
+            
+
+            s = template.format(simulationName=scel_list[i], encut=encut, ncore=ncore, nedos=nedos, magmom=magmom)
             f.close()
         with open(os.path.join(experiment_dir, scel_list[i], 'INCAR'), 'w') as incar:
             incar.write(s)

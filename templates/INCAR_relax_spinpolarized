@@ -21,6 +21,6 @@ LWAVE = .FALSE.
 LCHARG = .FALSE.
 LORBIT = 11
 
-
+MAGMOM = {magmom}
 NCORE = {ncore}
 NEDOS = {nedos}

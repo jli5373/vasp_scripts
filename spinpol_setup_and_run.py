@@ -37,13 +37,13 @@ scel_list = scel_list.reshape(-1)
 
 #make main experiment directory
 experiment_dir = os.path.join(experiments_path,experiment_name)
-os.makedirs(experiment_dir)
+os.makedirs(experiment_dir, exist_okay=True)
 os.chdir(experiment_dir)
 
 #iterate through scel list
 for i in range(len(scel_list)):
     #make scel dir
-        os.makedirs(os.path.join(experiment_dir, scel_list[i]))
+        os.makedirs(os.path.join(experiment_dir, scel_list[i]), exist_okay=True)
         #copy poscar, potcar, kpoint, format incar
         os.chdir(os.path.join(experiment_dir, scel_list[i]))
             

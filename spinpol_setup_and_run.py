@@ -15,7 +15,7 @@ scel_list_path = sys.argv[1]
 casm_training_dir = sys.argv[2]
 
 #Run-specific parameters
-experiment_name = 'spinpol_ZrN_rocksalt_1'
+experiment_name = 'spinpol_ZrN_hcp_1'
 encut = 525
 kdensity = 45
 ncore = 2
@@ -26,17 +26,18 @@ magnetic_moment = 1.5                #in units of mu_B --> moment of the metal
 
 
 #User parameters (for your system)
-template_path = '/Users/derickober/vasp_scripts/templates/' #specifically for the incar and submit templates
-experiments_path = '/Volumes/Derick_data/experiments'
+template_path = '/home/dober/vasp_scripts/templates/' #specifically for the incar and submit templates
+experiments_path = '/home/dober/experiments'
 
 
 
 #read in the scel list file 
 scel_list = np.genfromtxt(scel_list_path, dtype=np.str)
+scel_list = scel_list.reshape(-1)
 
 #make main experiment directory
 experiment_dir = os.path.join(experiments_path,experiment_name)
-os.mkdir(experiment_dir)
+os.mkdirs(experiment_dir)
 os.chdir(experiment_dir)
 
 #iterate through scel list
@@ -88,6 +89,6 @@ for i in range(len(scel_list)):
             submit.close()
         os.system('chmod +x submit_spinpol_loop')
         print('submitting %s ' % scel_list[i])
-        #os.system('qsub ')
+        os.system('qsub submit_spinpol_loop')
 
 

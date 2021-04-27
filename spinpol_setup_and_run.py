@@ -37,7 +37,7 @@ scel_list = scel_list.reshape(-1)
 
 #make main experiment directory
 experiment_dir = os.path.join(experiments_path,experiment_name)
-os.mkdirs(experiment_dir)
+os.makedirs(experiment_dir)
 os.chdir(experiment_dir)
 
 #iterate through scel list

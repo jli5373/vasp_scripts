@@ -9,7 +9,7 @@ import csv
 fit_dir  = sys.argv[1]                      #path to the fit directory
 hall_of_fame_index = sys.argv[2]           #individual number corresponding to hall of fame index 
 
-
+title = fit_dir.split('/')[-3] + ' ' + fit_dir.split('/')[-2] + ' ' + fit_dir.split('/')[-1]
 dft_scel_names = []
 clex_scel_names = []
 dft_hull_data = []
@@ -43,6 +43,7 @@ for subdir, dirs, files in os.walk(fit_dir):
                 below_hull_scel_names = below_hull_scel_names[1:]
 
 
+plt.title(title, fontsize=30)
 plt.plot(dft_hull_data[:,1], dft_hull_data[:,4],marker='o', color='xkcd:crimson')
 plt.plot(clex_hull_data[:,1], clex_hull_data[:,7],marker='o',linestyle='dashed' ,  color='b')
 plt.scatter(dft_hull_data[:,1], dft_hull_data[:,7], color='k')

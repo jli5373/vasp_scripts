@@ -10,7 +10,7 @@ fit_dir  = sys.argv[1]                      #path to the fit directory
 hall_of_fame_index = sys.argv[2]           #individual number corresponding to hall of fame index 
 
 os.chdir(fit_dir)
-os.system('casm-learn -s genetic_alg_settings.json --select %s') % hall_of_fame_index
+os.system('casm-learn -s genetic_alg_settings.json --select %s'% hall_of_fame_index) 
 os.system('casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt')
 full_formation_energy_file = 'full_formation_energies.txt'
 

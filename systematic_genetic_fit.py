@@ -21,7 +21,7 @@ kt = np.linspace(.01,.1,3)
 for i in range(len(A)):
     for j in range(len(B)):
         for k in range(len(kt)):
-            fitname = 'A-%s_B-%s_kt-%s' %(str(A[i]), str(B[j]), str(kt[k]))
+            fitname = 'A_%s_B_%s_kt_%s' %(str(A[i]), str(B[j]), str(kt[k]))
             os.makedirs(fitname, exist_ok=True)
             os.system('cp training_set.txt %s' % fitname)
 

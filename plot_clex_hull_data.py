@@ -67,6 +67,20 @@ ax.text(0.80, 0.80*min(dft_hull_data[:,4]), 'CV:      %.10f\nRMS:    %.10f\nWRMS
 
 labels = []
 
+
+plt.title(title, fontsize=30)
+plt.xlabel(r'Composition $\frac{N}{Zr}$', fontsize=20)
+plt.ylabel(r'Energy $\frac{eV}{prim}$', fontsize=20)
+plt.plot(dft_hull_data[:,1], dft_hull_data[:,4],marker='o', color='xkcd:crimson')
+labels.append('DFT Hull')
+plt.plot(clex_hull_data[:,1], clex_hull_data[:,7],marker='o',linestyle='dashed' ,  color='b')
+labels.append('ClEx Hull')
+plt.scatter(dft_hull_data[:,1], dft_hull_data[:,7], color='k')
+labels.append('Clex Prediction of DFT Hull')
+
+    
+
+
 if full_formation_energy_file:
     #format:
     #run casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt
@@ -81,18 +95,9 @@ if full_formation_energy_file:
     plt.scatter(composition, clex_formation_energy, marker='x', color='skyblue')
     labels.append('ClEx energies')
 
-plt.title(title, fontsize=30)
-plt.xlabel(r'Composition $\frac{N}{Zr}$', fontsize=20)
-plt.ylabel(r'Energy $\frac{eV}{prim}$', fontsize=20)
-plt.plot(dft_hull_data[:,1], dft_hull_data[:,4],marker='o', color='xkcd:crimson')
-labels.append('DFT Hull')
-plt.plot(clex_hull_data[:,1], clex_hull_data[:,7],marker='o',linestyle='dashed' ,  color='b')
-labels.append('ClEx Hull')
-plt.scatter(dft_hull_data[:,1], dft_hull_data[:,7], color='k')
-labels.append('Clex Prediction of DFT Hull')
 plt.scatter(below_hull_data[:,1], below_hull_data[:,7], marker='+', color='k')
 labels.append('Clex Below Clex Prediction of DFT Hull Configs')
-    
+
 
 plt.legend(labels, loc='lower left', fontsize=10)
 

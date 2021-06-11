@@ -76,17 +76,17 @@ if full_formation_energy_file:
     composition = data[:,0]
     dft_formation_energy = data[:,1]
     clex_formation_energy = data[:,3]
-    plt.scatter(composition, dft_formation_energy, color='xkcd:crimson')
+    plt.scatter(composition, dft_formation_energy, color='salmon')
     labels.append('DFT energies')
-    plt.scatter(composition, clex_formation_energy, marker='x', color='b')
+    plt.scatter(composition, clex_formation_energy, marker='x', color='skyblue')
     labels.append('ClEx energies')
 
 plt.title(title, fontsize=30)
 plt.xlabel(r'Composition $\frac{N}{Zr}$', fontsize=20)
 plt.ylabel(r'Energy $\frac{eV}{prim}$', fontsize=20)
-plt.plot(dft_hull_data[:,1], dft_hull_data[:,4],marker='o', color='red')
+plt.plot(dft_hull_data[:,1], dft_hull_data[:,4],marker='o', color='xkcd:crimson')
 labels.append('DFT Hull')
-plt.plot(clex_hull_data[:,1], clex_hull_data[:,7],marker='o',linestyle='dashed' ,  color='dodgerblue')
+plt.plot(clex_hull_data[:,1], clex_hull_data[:,7],marker='o',linestyle='dashed' ,  color='b')
 labels.append('ClEx Hull')
 plt.scatter(dft_hull_data[:,1], dft_hull_data[:,7], color='k')
 labels.append('Clex Prediction of DFT Hull')

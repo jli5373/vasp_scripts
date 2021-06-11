@@ -60,7 +60,7 @@ for subdir, dirs, files in os.walk(fit_dir):
 
 fig = plt.figure()
 ax = fig.add_subplot()
-ax.text(0.80, 0.80*min(dft_hull_data[:,4]), 'CV: %.10f\nRMS: %.10f\nWRMS: %.10f' %(cv, rms, wrms), fontsize=15)
+ax.text(0.80, 0.80*min(dft_hull_data[:,4]), 'CV:    %.10f\nRMS:   %.10f\nWRMS: %.10f' %(cv, rms, wrms), fontsize=15)
 
 plt.title(title, fontsize=30)
 plt.xlabel(r'Composition $\frac{N}{Zr}$', fontsize=20)

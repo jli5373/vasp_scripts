@@ -106,7 +106,7 @@ for i in range(len(A)):
             #collects full DFT and CLEX data, and generates plots for all fits
             os.system('casm-learn -s genetic_alg_settings.json --select 0')
             os.system('casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt')
-            os.system('plot_clex_hull_data.py `pwd` 0')
+            os.system('python ~/vasp_scripts/plot_clex_hull_data.py `pwd` 0')
             os.chdir('../')
             
 

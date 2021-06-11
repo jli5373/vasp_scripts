@@ -11,14 +11,12 @@ hall_of_fame_index = sys.argv[2]           #individual number corresponding to h
 full_formation_energy_file = 'full_formation_energies.txt'
 
 
-title = fit_dir.split('/')[-3] + '_' + fit_dir.split('/')[-1] 
+title = fit_dir.split('/')[-3] + ' ' + fit_dir.split('/')[-1]
 dft_scel_names = []
 clex_scel_names = []
 dft_hull_data = []
 clex_hull_data = []
-cv = None
-rms = None
-wrms = None
+
 
 for subdir, dirs, files in os.walk(fit_dir):
     for f in files:
@@ -46,30 +44,15 @@ for subdir, dirs, files in os.walk(fit_dir):
                 below_hull_scel_names = [row[0] for row in csv.reader(below_hull_file, delimiter=' ')]
                 below_hull_scel_names = below_hull_scel_names[1:]
 
-        if 'check.%s' % hall_of_fame_index in f:
-            checkfile_path = os.path.join(fit_dir,f)
-            with open(checkfile_path, 'r') as checkfile:
-                for line in checkfile.readlines():
-                    if 'LinearRegression' and 'GeneticAlgorithm' in line:
-                        cv = float(line.split()[3])
-                        rms = float(line.split()[4])
-                        wrms  = float(line.split()[5])
 
-
-
-
-fig = plt.figure()
-ax = fig.add_subplot()
-ax.text(0.80, 0.80*min(dft_hull_data[:,4]), 'CV:      %.10f\nRMS:    %.10f\nWRMS: %.10f' %(cv, rms, wrms), fontsize=15)
 
 plt.title(title, fontsize=30)
 plt.xlabel(r'Composition $\frac{N}{Zr}$', fontsize=20)
 plt.ylabel(r'Energy $\frac{eV}{prim}$', fontsize=20)
-plt.plot(dft_hull_data[:,1], dft_hull_data[:,4],marker='o', color='red')
-plt.plot(clex_hull_data[:,1], clex_hull_data[:,7],marker='o',linestyle='dashed' ,  color='dodgerblue')
+plt.plot(dft_hull_data[:,1], dft_hull_data[:,4],marker='o', color='xkcd:crimson')
+plt.plot(clex_hull_data[:,1], clex_hull_data[:,7],marker='o',linestyle='dashed' ,  color='b')
 plt.scatter(dft_hull_data[:,1], dft_hull_data[:,7], color='k')
 plt.scatter(below_hull_data[:,1], below_hull_data[:,7], marker='+', color='k')
-
 
 labels = ['DFT Hull', 'Clex Hull', 'Clex Prediction of DFT Hull', 'Clex Below Clex Prediction of DFT Hull Configs']
 
@@ -84,21 +67,19 @@ if full_formation_energy_file:
     dft_formation_energy = data[:,1]
     clex_formation_energy = data[:,3]
 
-    plt.scatter(composition, dft_formation_energy, color='xkcd:crimson')
+    plt.scatter(composition, dft_formation_energy)
     labels.append('DFT energies')
     
-    plt.scatter(composition, clex_formation_energy, marker='x', color='b')
+    plt.scatter(composition, clex_formation_energy)
     labels.append('ClEx energies')
     
 
 plt.legend(labels, loc='upper left', fontsize=20)
 
-
-
 fig = plt.gcf()
 fig.set_size_inches(18.5, 10)
-fig.savefig(os.path.join(fit_dir, title + '.png'), dpi=100)
-#plt.show()
+fig.savefig(os.path.join(fit_dir, fit_dir.split('/')[-1]), dpi=100)
+plt.show()
 
 
 

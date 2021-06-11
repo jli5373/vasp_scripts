@@ -26,8 +26,8 @@ magnetic_moment = 1.5                #in units of mu_B --> moment of the metal
 
 
 #User parameters (for your system)
-template_path = '/home/dober/vasp_scripts/templates/' #specifically for the incar and submit templates
-experiments_path = '/home/dober/experiments'
+template_path = '/Users/derickober/vasp_scripts/templates/' #specifically for the incar and submit templates
+experiments_path = '/Volumes/Derick_data/experiments'
 
 
 
@@ -89,6 +89,6 @@ for i in range(len(scel_list)):
             submit.close()
         os.system('chmod +x submit_spinpol_loop')
         print('submitting %s ' % scel_list[i])
-        os.system('qsub submit_spinpol_loop')
+        #os.system('qsub submit_spinpol_loop')
 
 

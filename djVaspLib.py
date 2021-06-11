@@ -14,6 +14,8 @@ class poscar:
 
         lineCount = 0
         readCoords = True
+        coord_line = 7
+        special_settings = []
         with open(self.poscar_file_path, 'r') as pfile:
             for line in pfile:
                 
@@ -35,9 +37,13 @@ class poscar:
                 elif lineCount == 7:
                     if line.split()[0][0] == 'd' or line.split()[0][0] == 'D':
                         self.coord_style = 'Direct'
-                    else:
+                    elif line.split()[0][0] == 'c' or line.split()[0][0] == 'C':
                         self.coord_style = 'Cartesian'
-                elif lineCount > 7 and readCoords:
+                    else:
+                        special_settings.append(line.strip())
+                        coord_line = coord_line + 1
+
+                elif lineCount > coord_line and readCoords:
                     self.coords.append(line.split()[0:3]) #will chop of any descriptors
                 lineCount += 1
 

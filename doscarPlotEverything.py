@@ -11,10 +11,11 @@ import seaborn as sns
 spin_polarized = True
 singleElementDos = False             #True will selectively plot the DOS for only one element
 combineLikeOrbitals = True              #True will sum px,py,pz, same for d
-atomOfInterest = 'Zr'               #Only plot the DOS for this element
-normalizeAtom = 'Zr'                #Normalize by the number of these atoms (typically the metal)
+atomOfInterest = 'O'               #Only plot the DOS for this element
+normalizeAtom = 'O'                #Normalize by the number of these atoms (typically the metal)
 customEnergyDomain = [-9,19]         #Set to False for automatic plot scaling
 customDosRange = [0,3]               #set to False for automaic plot scaling
+customTitle='Density of States'
 
 #provide path to the DOSCAR simulation directory
 simulationDir = sys.argv[1]
@@ -162,17 +163,18 @@ for j in range(1,len(elementBreakdownDos)):
 
 
 #VERY TEMPORARY to plot full dos spin polarized
+print('fermi energy is: %s' % doscarParams[-2])
 plt.plot(elementBreakdownEnergies , fullDos[:,1]/atomNumberLookup[normalizeAtom], color='k')
-plt.plot(elementBreakdownEnergies, fullDos[:,2]/atomNumberLookup[normalizeAtom], color='xkcd:crimson')
+plt.plot(elementBreakdownEnergies, -1*fullDos[:,2]/atomNumberLookup[normalizeAtom], color='xkcd:crimson')
 plt.legend(['Spin Up' , 'Spin Down'])
 plt.vlines(doscarParams[-2],min(simpleCombinedUpDownDos), max(simpleCombinedUpDownDos), linestyles='dashed', color='k')
 plt.xlabel('eV', fontsize=18)
 plt.ylabel('DOS (Per %s)'%(normalizeAtom), fontsize=18)
-plt.title(simulationDir.split('/')[-4] + '/' + simulationDir.split('/')[-3], fontsize=30)
+plt.title(customTitle, fontsize=30)
 fig = plt.gcf()
 fig.set_size_inches(18.5, 10)
 fig.savefig(os.path.join(simulationDir, '%s_magneticFullDoscar.pdf' % (simulationDir.split('/')[-4] + '_' + simulationDir.split('/')[-3] )), dpi=100)
-plt.show()
+#plt.show()
 
 
 

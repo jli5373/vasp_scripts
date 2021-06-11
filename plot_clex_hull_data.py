@@ -91,7 +91,7 @@ if full_formation_energy_file:
     labels.append('ClEx energies')
     
 
-plt.legend(labels, loc='upper left', fontsize=20)
+plt.legend(labels, loc='lower left', fontsize=10)
 
 
 

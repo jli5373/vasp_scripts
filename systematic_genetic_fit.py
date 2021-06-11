@@ -2,19 +2,20 @@ import numpy as np
 import os 
 import sys 
 
+#Runs a sweep across genetic algorithm fitting parameters A,B,kT. 
+#more parameters can be added: just modify the template string to acccept the new parameters.
+#make sure that the casm conda environment is active before you run this script
 
-ce_fits_dir = sys.argv[1]
+ce_fits_dir = sys.argv[1]           #the directory of cluster expansion fits. Currently, we use casm_root/ce_fits
 os.chdir(ce_fits_dir)
 
-
+run_fits = False                    #Change to True if you would like to do new fits. Leave False if you only want to generate new plots
 
 #fit parameters
 A = np.linspace(.1,2,3)
 B = np.linspace(0,2,3)
 kt = np.linspace(.01,.1,3)
 
-
-#os.system('conda activate casm')
 
 
 for i in range(len(A)):
@@ -97,11 +98,13 @@ for i in range(len(A)):
             
             os.chdir(fitname)
 
-            #os.system('rm check.0; rm checkhull_genetic_alg_settings_0_*; rm genetic_alg_settings_*')
-            #os.system('casm-learn -s genetic_alg_settings.json > fit.out')
-            #os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 0 > check.0')
+            if run_fits:
+                os.system('rm check.0; rm checkhull_genetic_alg_settings_0_*; rm genetic_alg_settings_*')
+                os.system('casm-learn -s genetic_alg_settings.json > fit.out')
+                os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 0 > check.0')
             
-            os.system('casm-learn -s genetic_alg_settings.json --select 0 > check_0')
+            #collects full DFT and CLEX data, and generates plots for all fits
+            os.system('casm-learn -s genetic_alg_settings.json --select 0')
             os.system('casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt')
             os.system('plot_clex_hull_data.py `pwd` 0')
             os.chdir('../')

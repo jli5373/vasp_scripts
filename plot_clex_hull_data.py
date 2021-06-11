@@ -57,38 +57,41 @@ for subdir, dirs, files in os.walk(fit_dir):
 
 
 
-
 fig = plt.figure()
 ax = fig.add_subplot()
 ax.text(0.80, 0.80*min(dft_hull_data[:,4]), 'CV:      %.10f\nRMS:    %.10f\nWRMS: %.10f' %(cv, rms, wrms), fontsize=15)
+
+labels = []
+
+if full_formation_energy_file:
+    #format:
+    #run casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt
+    #            configname    selected           comp(a)    formation_energy    hull_dist(MASTER,atom_frac)        clex()    clex_hull_dist(MASTER,atom_frac)
+    datafile = full_formation_energy_file
+    data = np.genfromtxt(datafile, skip_header=1, usecols=list(range(2,7))).astype(float)
+    composition = data[:,0]
+    dft_formation_energy = data[:,1]
+    clex_formation_energy = data[:,3]
+    plt.scatter(composition, dft_formation_energy, color='xkcd:crimson')
+    labels.append('DFT energies')
+    plt.scatter(composition, clex_formation_energy, marker='x', color='b')
+    labels.append('ClEx energies')
 
 plt.title(title, fontsize=30)
 plt.xlabel(r'Composition $\frac{N}{Zr}$', fontsize=20)
 plt.ylabel(r'Energy $\frac{eV}{prim}$', fontsize=20)
 plt.plot(dft_hull_data[:,1], dft_hull_data[:,4],marker='o', color='red')
+labels.append('DFT Hull')
 plt.plot(clex_hull_data[:,1], clex_hull_data[:,7],marker='o',linestyle='dashed' ,  color='dodgerblue')
+labels.append('ClEx Hull')
 plt.scatter(dft_hull_data[:,1], dft_hull_data[:,7], color='k')
+labels.append('Clex Prediction of DFT Hull')
 plt.scatter(below_hull_data[:,1], below_hull_data[:,7], marker='+', color='k')
+labels.append('Clex Below Clex Prediction of DFT Hull Configs')
 
 
-labels = ['DFT Hull', 'Clex Hull', 'Clex Prediction of DFT Hull', 'Clex Below Clex Prediction of DFT Hull Configs']
 
-if full_formation_energy_file:
-#format:
-#run casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt
-#            configname    selected           comp(a)    formation_energy    hull_dist(MASTER,atom_frac)        clex()    clex_hull_dist(MASTER,atom_frac)
-    datafile = full_formation_energy_file
 
-    data = np.genfromtxt(datafile, skip_header=1, usecols=list(range(2,7))).astype(float)
-    composition = data[:,0]
-    dft_formation_energy = data[:,1]
-    clex_formation_energy = data[:,3]
-
-    plt.scatter(composition, dft_formation_energy, color='xkcd:crimson')
-    labels.append('DFT energies')
-    
-    plt.scatter(composition, clex_formation_energy, marker='x', color='b')
-    labels.append('ClEx energies')
     
 
 plt.legend(labels, loc='lower left', fontsize=10)

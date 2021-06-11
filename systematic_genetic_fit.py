@@ -102,10 +102,15 @@ for i in range(len(A)):
                 os.system('rm check.0; rm checkhull_genetic_alg_settings_0_*; rm genetic_alg_settings_*')
                 os.system('casm-learn -s genetic_alg_settings.json > fit.out')
                 os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 0 > check.0')
-            
+                os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 1 > check.1')
+                os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 2 > check.2')
+                os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 3 > check.3')
+                os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 4 > check.4')
+
             #collects full DFT and CLEX data, and generates plots for all fits
-            os.system('casm-learn -s genetic_alg_settings.json --select 0')
-            os.system('casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt')
+                #these have been moved into the plotting script
+                #os.system('casm-learn -s genetic_alg_settings.json --select 0')
+                #os.system('casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt')
             os.system('python ~/vasp_scripts/plot_clex_hull_data.py `pwd` 0')
             os.chdir('../')
             

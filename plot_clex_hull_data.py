@@ -8,6 +8,10 @@ import csv
 #User input 
 fit_dir  = sys.argv[1]                      #path to the fit directory
 hall_of_fame_index = sys.argv[2]           #individual number corresponding to hall of fame index 
+
+os.chdir(fit_dir)
+os.system('casm-learn -s genetic_alg_settings.json --select %s') % hall_of_fame_index
+os.system('casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt')
 full_formation_energy_file = 'full_formation_energies.txt'
 
 
@@ -88,15 +92,9 @@ plt.scatter(dft_hull_data[:,1], dft_hull_data[:,7], color='k')
 labels.append('Clex Prediction of DFT Hull')
 plt.scatter(below_hull_data[:,1], below_hull_data[:,7], marker='+', color='k')
 labels.append('Clex Below Clex Prediction of DFT Hull Configs')
-
-
-
-
     
 
 plt.legend(labels, loc='lower left', fontsize=10)
-
-
 
 fig = plt.gcf()
 fig.set_size_inches(18.5, 10)

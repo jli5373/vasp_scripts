@@ -59,7 +59,7 @@ for i in range(len(A)):
                                 "method": "GeneticAlgorithm",
                                 "kwargs": {
                                 "constraints_kwargs": {
-                                    "n_features_max": 20,
+                                    "n_features_max": 100,
                                     "n_features_min": 3,
                                     "fix_off": [],
                                     "fix_on": [0,1,2]
@@ -70,7 +70,7 @@ for i in range(len(A)):
                                     "n_generation": 20,
                                     "n_repetition": 20,
                                     "n_features_init": 3,
-                                    "n_population": 5,
+                                    "n_population": 10,
                                     "n_halloffame": 10
                                 },
                                 "cxUniformProb": 0.5
@@ -99,13 +99,16 @@ for i in range(len(A)):
             os.chdir(fitname)
 
             if run_fits:
+                print("Removing old data for individual 0")
                 os.system('rm check.0; rm checkhull_genetic_alg_settings_0_*; rm genetic_alg_settings_*')
+                print("Running new fit")
                 os.system('casm-learn -s genetic_alg_settings.json > fit.out')
+                print("Writing data for individual 0")
                 os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 0 > check.0')
-                os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 1 > check.1')
-                os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 2 > check.2')
-                os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 3 > check.3')
-                os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 4 > check.4')
+               # os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 1 > check.1')
+               # os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 2 > check.2')
+               # os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 3 > check.3')
+               # os.system('casm-learn -s genetic_alg_settings.json --checkhull --indiv 4 > check.4')
 
             #collects full DFT and CLEX data, and generates plots for all fits
                 #these have been moved into the plotting script

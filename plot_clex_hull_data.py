@@ -61,11 +61,18 @@ for subdir, dirs, files in os.walk(fit_dir):
         if 'check.%s' % hall_of_fame_index in f:
             checkfile_path = os.path.join(fit_dir,f)
             with open(checkfile_path, 'r') as checkfile:
+                linecount = 0
+                cv_rms_wrms_info_line = int
                 for line in checkfile.readlines():
-                    if 'LinearRegression' and 'GeneticAlgorithm' in line:
+                    if line.strip() == '-- Check: individual 0  --':# % hall_of_fame_index:
+                        cv_rms_wrms_info_line = linecount + 3 
+                        print("found cv line")
+
+                    if linecount == cv_rms_wrms_info_line:
                         cv = float(line.split()[3])
                         rms = float(line.split()[4])
                         wrms  = float(line.split()[5])
+                    linecount += 1
 
 
 

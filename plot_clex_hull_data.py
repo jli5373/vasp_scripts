@@ -9,8 +9,12 @@ import csv
 fit_dir  = sys.argv[1]                      #path to the fit directory
 hall_of_fame_index = sys.argv[2]           #individual number corresponding to hall of fame index 
 
+
+
+print("\nBegin Plotting fit data:\n______________________")
+
 os.chdir(fit_dir)
-os.system('casm-learn -s genetic_alg_settings.json --select %s'% hall_of_fame_index) 
+os.system('casm-learn -s genetic_alg_settings.json --select %s > select_fit_eci.out'% hall_of_fame_index) 
 os.system('casm query -k comp formation_energy hull_dist clex clex_hull_dist -o full_formation_energies.txt')
 full_formation_energy_file = 'full_formation_energies.txt'
 
@@ -23,6 +27,8 @@ clex_hull_data = []
 cv = None
 rms = None
 wrms = None
+below_hull_exists = False
+
 
 for subdir, dirs, files in os.walk(fit_dir):
     for f in files:
@@ -44,11 +50,13 @@ for subdir, dirs, files in os.walk(fit_dir):
 
 
         if '_%s_below_hull' % hall_of_fame_index in f:
+            below_hull_exists = True
             below_hull_path = os.path.join(fit_dir, f)
-            below_hull_data = np.genfromtxt(below_hull_path, skip_header=1, usecols=list(range(1,10))).astype(float)
+            below_hull_data = np.reshape(np.genfromtxt(below_hull_path, skip_header=1, usecols=list(range(1,10))).astype(float), ((-1,9)))
             with open(below_hull_path, 'r') as below_hull_file:
                 below_hull_scel_names = [row[0] for row in csv.reader(below_hull_file, delimiter=' ')]
                 below_hull_scel_names = below_hull_scel_names[1:]
+    
 
         if 'check.%s' % hall_of_fame_index in f:
             checkfile_path = os.path.join(fit_dir,f)
@@ -94,10 +102,11 @@ if full_formation_energy_file:
     labels.append('DFT energies')
     plt.scatter(composition, clex_formation_energy, marker='x', color='skyblue')
     labels.append('ClEx energies')
-
-plt.scatter(below_hull_data[:,1], below_hull_data[:,7], marker='+', color='k')
-labels.append('Clex Below Clex Prediction of DFT Hull Configs')
-
+if below_hull_exists:
+    plt.scatter(below_hull_data[:,1], below_hull_data[:,7], marker='+', color='k')
+    labels.append('Clex Below Clex Prediction of DFT Hull Configs')
+else:
+    print("'_%s_below_hull' file doesn't exist" % hall_of_fame_index)
 
 plt.legend(labels, loc='lower left', fontsize=10)
 
@@ -106,11 +115,5 @@ fig.set_size_inches(18.5, 10)
 fig.savefig(os.path.join(fit_dir, title + '.png'), dpi=100)
 #plt.show()
 
-
-
-
-
-
-
-
+print("\nFinished plotting fit data.\n_____________________")
 

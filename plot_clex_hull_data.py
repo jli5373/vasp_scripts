@@ -66,7 +66,6 @@ for subdir, dirs, files in os.walk(fit_dir):
                 for line in checkfile.readlines():
                     if line.strip() == '-- Check: individual 0  --':# % hall_of_fame_index:
                         cv_rms_wrms_info_line = linecount + 3 
-                        print("found cv line")
 
                     if linecount == cv_rms_wrms_info_line:
                         cv = float(line.split()[3])

@@ -13,7 +13,8 @@ import csv
 #User input 
 fit_dir  = sys.argv[1]                      #path to the fit directory (where you ran "casm-learn -s settings_file.json --checkhull > fit.out")
 hall_of_fame_index = sys.argv[2]           #individual number corresponding to hall of fame index
-settings_file_name = 'genetic_alg_settings.json' #right now this is hardcoded, but I think it'd be nice to make it variable in some sense
+#settings_file_name = 'genetic_alg_settings.json' #right now this is hardcoded, but I think it'd be nice to make it variable in some sense
+settings_file_name = 'lassoCV_settings.json'
 full_formation_energy_file = 'full_formation_energies.txt'
 
 print("\nBegin Plotting fit data:\n______________________")

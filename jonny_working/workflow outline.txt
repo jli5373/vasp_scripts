@@ -16,8 +16,12 @@ assuming starting from: ran relaxation->static on every config and already picke
 we want: band struct/charge diff/parchg (require E ranges)/rerun relax->static w spinpol
 
 template INCAR/other inputs for the scenarios (every should have template)
+
+-------------------------------------------------------
+
 ex. spinpol
-INCAR_relax_spinpolarized_template
+in main folder: SCEL_list, python script to setup folders (which has header inputs)
+../templates/INCAR_relax_spinpolarized_template
 
 Individual scripts/functions based on scenario
 
@@ -37,4 +41,4 @@ elseif(random POSCAR)
 generate submit scripts that go in same spot as input INCAR
 qsub submit script (this way commenting anything in the SCEL list doesnt rerun it)
 
-in main folder: SCEL_list, python script to setup folders (which has header inputs)
+-------------------------------------------------------------

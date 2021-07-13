@@ -10,6 +10,7 @@ with open(os.path.join(casm_root, 'structure_file_path_batch.txt'), 'w') as batc
     for subdir, dirs, files in os.walk(searchdir):
         for f in files:
             if f == 'POS':
+                
                 batchfile.write(os.path.join(subdir, 'POS')+'\n')
                 #print(os.path.join(subdir, 'POS'))
     batchfile.close()

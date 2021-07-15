@@ -31,7 +31,8 @@ for subdir, dirs, files in os.walk(mc_runs_directory):
                 temperature = data['T']
                 plt.scatter(composition, temperature)
 
-plt.legend(labels)
+#plt.legend(labels)
+plt.ylim([100,2000])
 title = 'Chemical Potential and Temperature Sweep Rain Plot'
 plt.title('Chemical Potential and Temperature Sweep Rain Plot', fontsize=30)
 fig = plt.gcf()

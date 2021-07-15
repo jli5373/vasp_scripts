@@ -7,9 +7,9 @@
     "formation_energy" : "formation_energy"
   },
   "supercell" : [
-    [20, 0, 0],
-    [0, 20, 0],
-    [0, 0, 20]
+    [-4, 8, 0],
+    [2, -2, 8],
+    [5, -1, -6]
   ],
   "data" : {
     "sample_by" : "pass",

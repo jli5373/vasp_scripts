@@ -9,7 +9,7 @@ import json
 
 #User defined inputs
 #chem_potential = chem_potential = np.linspace(-0.5, .5, 11)
-chem_potential = [-0.5, -0.4, -0.3, -0.2, -0.1,  0. ,  0.1,  0.2,  0.3,  0.4,  0.5]
+chem_potential = np.asarray([-0.5, -0.4, -0.3, -0.2, -0.1,  0. ,  0.1,  0.2,  0.3,  0.4,  0.5]) + 0.05
 
 temperature_low = 100
 temperature_high = 1500

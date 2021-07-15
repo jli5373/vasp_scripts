@@ -8,17 +8,20 @@ import time
 #User provides values for mu, as well as temperature upper, lowe bounds and temperature increments within this script
 
 #User defined inputs
-chem_potential = chem_potential = np.linspace(-0.5, .5, 11)
+#chem_potential = chem_potential = np.linspace(-0.5, .5, 11)
+#chem_potential = np.asarray([-0.5, -0.4, -0.3, -0.2, -0.1,  0. ,  0.1,  0.2,  0.3,  0.4,  0.5]) + 0.05
+#chem_potential = np.asarray([-1.0, -0.9, -0.8, -0.7, -0.6, 0.6, 0.7, 0.8, 0.9, 1.0]) + 0.05
+#temperature_low = 100
+#temperature_high = 1500
+chem_potential =  np.linspace(-0.8, 0.8, 17) + 0.05
+#chem_potential = np.asarray([-1.0, -0.9, 0.9, 1.0])
 temperature_low = 100
-temperature_high = 1500
+temperature_high = 2000
+
 temperature_increment = -50.0
 
 #Leave on false to format necessary directories and settings files. Change to True to run metropolis monte carlo
 run_monte_carlo = True       
-
-
-#Cludgey parallel stuff
-max_threads = 20
 
 
 #Parse input parameters

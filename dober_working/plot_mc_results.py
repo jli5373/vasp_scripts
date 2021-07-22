@@ -5,6 +5,9 @@ import json
 import matplotlib.pyplot as plt
 
 
+
+#Provide a directory within a casm project to store monte carlo runs via command line. 
+
 #Parse input parameters
 parser = argparse.ArgumentParser()
 parser.add_argument("-md", '--monte_dir', help="full path to your monte carlo directory (fixed mu, temperature sweep)")
@@ -27,7 +30,12 @@ for subdir, dirs, files in os.walk(mc_runs_directory):
                 composition = data['<comp(a)>']
                 temperature = data['T']
                 plt.scatter(composition, temperature)
-                plt.legend(labels)
-                 
 
+#plt.legend(labels)
+plt.ylim([100,2000])
+title = 'Chemical Potential and Temperature Sweep Rain Plot'
+plt.title('Chemical Potential and Temperature Sweep Rain Plot', fontsize=30)
+fig = plt.gcf()
+fig.set_size_inches(18.5, 10)
+fig.savefig(os.path.join(mc_runs_directory, title + '.png'), dpi=100)
 plt.show()

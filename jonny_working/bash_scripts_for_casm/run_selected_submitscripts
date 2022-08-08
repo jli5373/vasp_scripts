@@ -1,0 +1,13 @@
+#!/bin/bash
+#Run this from inside training_data/
+printf "Began submitting vasp loops\n" >SUBMITSTATUS
+for val in $(cat ../new_configs_06_30.txt); do #replace the txt file with relevant selection
+    #echo $val
+    cd ./$val
+        cd calctype.default
+        qsub submit_vasp_loop
+        printf "Submitted $val run\n" >>../../../SUBMITSTATUS
+    cd ../../.. #now in training_data
+done
+
+printf "Finished" >>SUBMITSTATUS

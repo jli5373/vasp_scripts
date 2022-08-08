@@ -1,0 +1,7 @@
+#!/bin/bash
+#input: ./generate_POSCARs_from_MC $1 $2 ($1,2 = start conditions, end conditions)
+for ((I=$1;I<=$2;I++)); do
+    echo $I
+    casm monte --initial-POSCAR $I -s mc_settings.json
+    casm monte --final-POSCAR $I -s mc_settings.json
+done

@@ -31,7 +31,7 @@
         "method": "GeneticAlgorithm",
         "kwargs": {
         "constraints_kwargs": {
-            "n_features_max": 100,
+            "n_features_max": 20,
             "n_features_min": 3,
             "fix_off": [],
             "fix_on": [0,1,2]
